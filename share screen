@@ -1,0 +1,50 @@
+let localScreenTracks;
+let sharingScreen = false;
+
+let toggleScreen = async (e) => {
+    let screenButton = e.currentTarget
+    let cameraButton = document.getElementById('camera-btn')
+
+    if(!sharingScreen){
+        sharingScreen = true
+
+        screenButton.classList.add('active')
+        cameraButton.classList.remove('active')
+        cameraButton.style.display = 'none'
+
+        localScreenTracks = await AgoraRTC.createScreenVideoTrack()
+
+        document.getElementById(`user-container-${UID}`).remove()
+        
+
+        let player = `<div class="video__container" id="user-container-${UID}">
+                <div class="video-player" id="user-${UID}"></div>
+            </div>`
+
+        
+        
+
+        userIdInDisplayFrame = `user-container-${UID}`
+        localScreenTracks.play(`user-${UID}`)
+
+        await client.unpublish([localTracks[1]])
+        await client.publish([localScreenTracks])
+
+        let videoFrames = document.getElementsByClassName('video__container')
+        for(let i = 0; videoFrames.length > i; i++){
+            if(videoFrames[i].id != userIdInDisplayFrame){
+              videoFrames[i].style.height = '100px'
+              videoFrames[i].style.width = '100px'
+            }
+          }
+
+
+    }else{
+        sharingScreen = false 
+        cameraButton.style.display = 'block'
+        
+        await client.unpublish([localScreenTracks])
+
+        switchToCamera()
+    }
+}
